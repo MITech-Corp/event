@@ -32,6 +32,50 @@ Pastikan [Docker](https://docs.docker.com/get-docker/) dan Docker Compose sudah 
 
 Database: MySQL di `localhost:3306`, user `halbil`, password `secret`, database `halbil`.
 
+## Data Karyawan dari SharePoint Online (opsional)
+
+Daftar karyawan bisa diambil langsung dari file Excel/CSV di SharePoint Online tanpa import manual.
+
+1. **Azure AD – App registration**
+   - Buat aplikasi di [Azure Portal](https://portal.azure.com) → Azure Active Directory → App registrations → New registration.
+   - Catat **Application (client) ID** dan **Directory (tenant) ID**.
+   - Certificates & secrets → New client secret → catat **Value** (client secret).
+
+2. **API permissions**
+   - App registration → API permissions → Add permission → Microsoft Graph → Application permissions.
+   - Tambah: **Sites.Read.All** dan **Files.Read.All** (untuk OneDrive personal tambah **User.Read.All**).
+   - Klik **Grant admin consent**.
+
+3. **Lokasi file – pilih salah satu**
+
+   **A) File di OneDrive personal** (link seperti `https://mitechcorp-my.sharepoint.com/.../personal/kezia_fitrari_mitech_co_id/...`)
+   - Dari URL: host `...-my.sharepoint.com` dan path `personal/email_mitech_co_id` → pemilik file = `email@mitech.co.id`.
+   - Nama file dari parameter `file=...` (mis. `Halal Bihalal Registration Form.xlsx`).
+   - Isi `.env` dengan **MS_USER_UPN** (email pemilik) dan **MS_FILE_PATH** (nama file di root, atau path lengkap jika di dalam folder). **Jika path ada spasi, wajib pakai tanda petik:**
+   ```env
+   MS_USER_UPN=kezia_fitrari@mitech.co.id
+   MS_FILE_PATH="/Halal Bihalal Registration Form.xlsx"
+   ```
+   - Jika file ada di dalam folder OneDrive, gunakan path lengkap, mis. `MS_FILE_PATH="/Documents/Halal Bihalal Registration Form.xlsx"`.
+
+   **B) File di SharePoint team site / document library**
+   - Bisa pakai [Graph Explorer](https://developer.microsoft.com/graph/graph-explorer): `GET https://graph.microsoft.com/v1.0/sites/{site-hostname}:/sites/{site-name}:/drives` untuk dapat `id` drive.
+   - Path file relatif ke root drive: `/Karyawan.xlsx` atau `"/Shared Documents/Daftar Karyawan.csv"` (pakai petik jika ada spasi).
+   - Isi **MS_DRIVE_ID** dan **MS_FILE_PATH** (jangan isi MS_USER_UPN).
+
+4. **Contoh `.env` lengkap**
+   ```env
+   MS_TENANT_ID=...      # Directory (tenant) ID
+   MS_CLIENT_ID=...      # Application (client) ID
+   MS_CLIENT_SECRET=...  # Client secret value
+   # Salah satu:
+   MS_DRIVE_ID=...       # Untuk SharePoint team site
+   MS_USER_UPN=...       # Untuk OneDrive personal (email pemilik file)
+   MS_FILE_PATH="/Halal Bihalal Registration Form.xlsx"
+   ```
+
+Jika `MS_CLIENT_ID` dikosongkan, halaman Daftar Karyawan kembali memakai data dari database (import Excel seperti biasa).
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.

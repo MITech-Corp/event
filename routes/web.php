@@ -38,7 +38,5 @@ Route::get('/attendance/employee', [AttendanceController::class, 'findEmployee']
 // Admin pages (login required)
 Route::middleware('auth')->group(function () {
     Route::get('/employees', [EmployeeImportController::class, 'index'])->name('employees.index');
-    Route::get('/employees/import', [EmployeeImportController::class, 'showImportForm'])->name('employees.import');
-    Route::post('/employees/import', [EmployeeImportController::class, 'import'])->name('employees.import.process');
     Route::get('/attendances', [AttendanceController::class, 'adminIndex'])->name('attendances.index');
 });
