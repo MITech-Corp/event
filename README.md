@@ -21,6 +21,17 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+## Menjalankan dengan Docker (PHP 8.3)
+
+Pastikan [Docker](https://docs.docker.com/get-docker/) dan Docker Compose sudah terpasang.
+
+1. Salin `.env.example` ke `.env` jika belum ada.
+2. Build dan jalankan: `docker compose up -d --build`
+3. Generate key & migration: `docker compose exec app php artisan key:generate` lalu `docker compose exec app php artisan migrate`
+4. Akses: http://localhost:8000
+
+Database: MySQL di `localhost:3306`, user `halbil`, password `secret`, database `halbil`.
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.

@@ -1,20 +1,23 @@
 @extends('layouts.app')
 
-@section('title', 'Import Employees')
+@section('title', 'Import Karyawan')
 
 @section('content')
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h1 class="h3 mb-3 text-center">Import Employees from Excel</h1>
+        <div class="col-lg-6">
+            <div class="text-center mb-4">
+                <h1 class="h4 fw-bold text-dark">Import Karyawan</h1>
+                <p class="text-muted small mb-0">Unggah file Excel dari data pendaftaran Halal Bihalal</p>
+            </div>
 
             @if (session('success'))
-                <div class="alert alert-success">
+                <div class="alert alert-success border-0 shadow-sm rounded-3">
                     {{ session('success') }}
                 </div>
             @endif
 
             @if ($errors->any())
-                <div class="alert alert-danger">
+                <div class="alert alert-danger border-0 shadow-sm rounded-3">
                     <ul class="mb-0">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -23,35 +26,32 @@
                 </div>
             @endif
 
-            <div class="card">
+            <div class="card card-halal">
                 <div class="card-body">
                     <form method="POST" action="{{ route('employees.import.process') }}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-3">
-                            <label for="file" class="form-label">Excel File</label>
-                            <input type="file" class="form-control" id="file" name="file" required>
-                            <div class="form-text">
-                                Accepted formats: .xlsx, .xls, .csv
-                            </div>
+                            <label for="file" class="form-label fw-600">File Excel</label>
+                            <input type="file" class="form-control rounded-3" id="file" name="file" required accept=".xlsx,.xls,.csv">
+                            <div class="form-text small">Format: .xlsx, .xls, atau .csv</div>
                         </div>
 
-                        <div class="mb-3">
-                            <p class="mb-1"><strong>Expected columns (header row):</strong></p>
-                            <ul class="mb-0">
-                                <li>Full Name</li>
-                                <li>Employee ID Number</li>
-                                <li>Phone Number (WhatsApp)</li>
-                                <li>Your Email</li>
+                        <div class="mb-4 p-3 rounded-3 small" style="background: rgba(13, 148, 136, 0.06);">
+                            <p class="mb-2 fw-600 text-halal">Kolom yang diharapkan (baris pertama = header):</p>
+                            <ul class="mb-0 text-muted">
+                                <li>Full Name / Nama Lengkap</li>
+                                <li>Employee ID No / Employee ID Number</li>
+                                <li>Phone Number / Telepon</li>
+                                <li>Your Email / Email</li>
                                 <li>Role / Position</li>
                                 <li>Office Placement</li>
-                                <li>I hereby confirm my attendance at this event. (ignored)</li>
                             </ul>
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">
-                                Upload &amp; Import
+                            <button type="submit" class="btn btn-halal rounded-3 py-2">
+                                Unggah &amp; Import
                             </button>
                         </div>
                     </form>
@@ -60,4 +60,3 @@
         </div>
     </div>
 @endsection
-

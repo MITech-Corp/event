@@ -19,13 +19,12 @@ class AttendanceController extends Controller
         $data = $request->validate([
             'employee_id' => ['required', 'string'],
         ]);
-
         $employee = Employee::where('employee_id', $data['employee_id'])->first();
 
         if (! $employee) {
             return back()
                 ->withInput()
-                ->with('error', 'Nomor karyawan tidak terdaftar');
+                ->with('error', 'Employee ID not found');
         }
 
         $today = Carbon::today();
@@ -37,7 +36,7 @@ class AttendanceController extends Controller
         if ($alreadyCheckedIn) {
             return back()
                 ->withInput()
-                ->with('warning', 'Anda sudah melakukan absensi hari ini');
+                ->with('warning', 'You have already checked in');
         }
 
         Attendance::create([
@@ -46,7 +45,9 @@ class AttendanceController extends Controller
         ]);
 
         return back()
-            ->with('success', 'Absensi berhasil. Selamat datang, ' . $employee->name);
+            ->with('success', 'Attendance recorded successfully. Welcome, ' . $employee->name)
+            ->with('employee_name', $employee->name)
+            ->with('employee_position', $employee->position);
     }
 
     public function adminIndex()
