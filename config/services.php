@@ -31,4 +31,25 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Microsoft Graph (SharePoint Online / OneDrive for Business)
+    |--------------------------------------------------------------------------
+    | Untuk mengambil data karyawan langsung dari file Excel/CSV di SharePoint
+    | atau OneDrive personal. Kosongkan MS_CLIENT_ID untuk menonaktifkan.
+    |
+    | - OneDrive personal (link ...-my.sharepoint.com/.../personal/...):
+    |   Isi MS_USER_UPN (email pemilik file) dan MS_FILE_PATH (nama file atau path).
+    | - SharePoint team site / document library:
+    |   Isi MS_DRIVE_ID dan MS_FILE_PATH.
+    */
+    'ms' => [
+        'tenant_id' => env('MS_TENANT_ID'),
+        'client_id' => env('MS_CLIENT_ID'),
+        'client_secret' => env('MS_CLIENT_SECRET'),
+        'drive_id' => env('MS_DRIVE_ID'),
+        'user_upn' => env('MS_USER_UPN'),
+        'file_path' => env('MS_FILE_PATH', '/Karyawan.xlsx'),
+    ],
+
 ];

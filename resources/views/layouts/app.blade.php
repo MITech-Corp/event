@@ -96,7 +96,7 @@
     <nav class="navbar navbar-expand-lg navbar-light navbar-halal mb-4">
         <div class="container">
             <a class="navbar-brand" href="{{ route('attendance.index') }}">
-                <img src="{{ asset('images/mitech-logo.png') }}" alt="MITech" class="d-inline-block">
+                <img src="https://mitech.co.id/images/logo.png" alt="MITech" class="d-inline-block">
                 <span class="d-none d-sm-inline">Halal Bihalal</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -111,9 +111,6 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link px-3" href="{{ route('employees.index') }}">Karyawan</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-3" href="{{ route('employees.import') }}">Import</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link px-3" href="{{ route('attendances.index') }}">Rekap</a>

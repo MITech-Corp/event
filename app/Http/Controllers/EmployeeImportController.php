@@ -2,39 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Imports\EmployeesImport;
-use App\Models\Employee;
-use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Services\SharePointEmployeeService;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class EmployeeImportController extends Controller
 {
-    public function index()
+    public function index(SharePointEmployeeService $sharePoint)
     {
-        $employees = Employee::orderBy('name')->paginate(20);
+        $employees = $sharePoint->getEmployees();
 
-        return view('employees.index', compact('employees'));
-    }
+        if ($employees === null) {
+            return view('employees.index', [
+                'employees' => new LengthAwarePaginator([], 0, 20),
+                'fromSharePoint' => false,
+                'sharePointConfigured' => false,
+            ]);
+        }
 
-    public function showImportForm()
-    {
-        return view('employees.import');
-    }
+        $page = (int) request('page', 1);
+        $perPage = 20;
+        $total = $employees->count();
+        $items = $employees->forPage($page, $perPage)->values();
+        $paginator = new LengthAwarePaginator(
+            $items,
+            $total,
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
 
-    public function import(Request $request)
-    {
-        $request->validate([
-            'file' => ['required', 'file', 'mimes:xlsx,xls,csv'],
+        return view('employees.index', [
+            'employees' => $paginator,
+            'fromSharePoint' => true,
+            'sharePointConfigured' => true,
         ]);
-
-        $import = new EmployeesImport();
-        Excel::import($import, $request->file('file'));
-
-        $count = $import->getImportedCount();
-
-        return redirect()
-            ->route('employees.import')
-            ->with('success', "Employee data imported successfully. Total records processed: {$count}");
     }
 }
 

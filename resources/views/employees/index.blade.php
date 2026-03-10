@@ -4,17 +4,15 @@
 
 @section('content')
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
-        <h1 class="h4 mb-0 fw-bold text-dark">Daftar Karyawan</h1>
-        <a href="{{ route('employees.import') }}" class="btn btn-halal">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="me-1 align-text-bottom" viewBox="0 0 16 16">
-                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
-            </svg>
-            Import dari Excel
-        </a>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <h1 class="h4 mb-0 fw-bold text-dark">Daftar Karyawan</h1>
+            @if(isset($fromSharePoint) && $fromSharePoint)
+                <span class="badge bg-primary">Sumber: SharePoint</span>
+            @endif
+        </div>
     </div>
 
-    @if ($employees->count() === 0)
+    @if (!$employees->count())
         <div class="card card-halal">
             <div class="card-body text-center py-5">
                 <div class="text-halal opacity-75 mb-2">
@@ -22,9 +20,13 @@
                         <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
                     </svg>
                 </div>
-                <p class="text-muted mb-0">Belum ada data karyawan.</p>
-                <p class="small text-muted">Import data dari file Excel untuk memulai.</p>
-                <a href="{{ route('employees.import') }}" class="btn btn-halal btn-sm mt-2 rounded-3">Import Excel</a>
+                @if(isset($sharePointConfigured) && !$sharePointConfigured)
+                    <p class="text-muted mb-0">SharePoint belum dikonfigurasi.</p>
+                    <p class="small text-muted">Isi MS_TENANT_ID, MS_CLIENT_ID, MS_CLIENT_SECRET, serta MS_USER_UPN atau MS_DRIVE_ID dan MS_FILE_PATH di file .env. Lihat README untuk panduan.</p>
+                @else
+                    <p class="text-muted mb-0">Tidak ada data dari file SharePoint.</p>
+                    <p class="small text-muted">Periksa MS_FILE_PATH dan pastikan file Excel/CSV ada di SharePoint/OneDrive.</p>
+                @endif
             </div>
         </div>
     @else

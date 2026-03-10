@@ -41,10 +41,10 @@
                             @foreach ($attendances as $attendance)
                                 <tr>
                                     <td class="ps-3 text-muted">{{ $loop->iteration + ($attendances->currentPage() - 1) * $attendances->perPage() }}</td>
-                                    <td class="fw-600">{{ $attendance->employee?->name ?? '–' }}</td>
-                                    <td>{{ $attendance->employee?->employee_id ?? '–' }}</td>
-                                    <td class="d-none d-md-table-cell small">{{ $attendance->employee?->position ?? '–' }}</td>
-                                    <td class="d-none d-lg-table-cell small text-muted">{{ $attendance->employee?->office ?? '–' }}</td>
+                                    <td class="fw-600">{{ $attendance->employee_name ?? '–' }}</td>
+                                    <td>{{ $attendance->employee_identifier ?? '–' }}</td>
+                                    <td class="d-none d-md-table-cell small">{{ $attendance->employee_position ?? '–' }}</td>
+                                    <td class="d-none d-lg-table-cell small text-muted">{{ $attendance->employee_office ?? '–' }}</td>
                                     <td class="small">{{ $attendance->checkin_time?->format('d/m/Y H:i') ?? '–' }}</td>
                                 </tr>
                             @endforeach
