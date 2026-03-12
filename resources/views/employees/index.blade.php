@@ -3,14 +3,36 @@
 @section('title', 'Daftar Karyawan')
 
 @section('content')
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-3">
         <div class="d-flex align-items-center gap-2 flex-wrap">
             <h1 class="h4 mb-0 fw-bold text-dark">Daftar Karyawan</h1>
             @if(isset($fromSharePoint) && $fromSharePoint)
                 <span class="badge bg-primary">Sumber: SharePoint</span>
             @endif
         </div>
+        <form method="GET" action="{{ route('employees.index') }}" class="w-100 w-md-auto" role="search">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-white border-end-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242.656a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
+                    </svg>
+                </span>
+                <input
+                    type="search"
+                    name="q"
+                    class="form-control border-start-0"
+                    placeholder="Cari nama, ID, email, posisi, kantor"
+                    value="{{ $search ?? '' }}"
+                >
+            </div>
+        </form>
     </div>
+
+    @if(isset($search) && $search)
+        <p class="small text-muted mb-2">
+            Hasil pencarian untuk: <span class="fw-600">"{{ $search }}"</span>
+        </p>
+    @endif
 
     @if (!$employees->count())
         <div class="card card-halal">

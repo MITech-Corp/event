@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Services\SharePointEmployeeService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AttendanceController extends Controller
 {
@@ -59,11 +60,41 @@ class AttendanceController extends Controller
             ->with('employee_position', $employee->position);
     }
 
-    public function adminIndex()
+    public function adminIndex(SharePointEmployeeService $sharePoint)
     {
+        $filter = request('filter', 'sudah_hadir');
         $attendances = Attendance::orderByDesc('checkin_time')->paginate(20);
 
-        return view('attendances.index', compact('attendances'));
+        $absentEmployees = null;
+        if ($filter === 'belum_hadir') {
+            $employees = $sharePoint->getEmployees();
+            if ($employees !== null) {
+                $hadirIds = Attendance::query()->distinct()->pluck('employee_identifier')->map(fn ($id) => (string) $id)->flip();
+                $absentEmployees = $employees->filter(fn ($e) => ! $hadirIds->has(trim((string) $e->employee_id)))->values();
+                $page = (int) request('page', 1);
+                $perPage = 20;
+                $total = $absentEmployees->count();
+                $items = $absentEmployees->forPage($page, $perPage)->values();
+                $absentEmployees = new LengthAwarePaginator(
+                    $items,
+                    $total,
+                    $perPage,
+                    $page,
+                    ['path' => request()->url(), 'query' => request()->query()]
+                );
+            }
+        }
+
+        return view('attendances.index', compact('attendances', 'filter', 'absentEmployees'));
+    }
+
+    public function reset()
+    {
+        Attendance::query()->delete();
+
+        return redirect()
+            ->route('attendances.index')
+            ->with('success', 'Rekap kehadiran telah direset. Semua data absensi telah dihapus.');
     }
 
     public function findEmployee(Request $request, SharePointEmployeeService $sharePoint)
