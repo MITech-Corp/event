@@ -39,4 +39,5 @@ Route::get('/attendance/employee', [AttendanceController::class, 'findEmployee']
 Route::middleware('auth')->group(function () {
     Route::get('/employees', [EmployeeImportController::class, 'index'])->name('employees.index');
     Route::get('/attendances', [AttendanceController::class, 'adminIndex'])->name('attendances.index');
+    Route::delete('/attendances', [AttendanceController::class, 'reset'])->name('attendances.reset');
 });

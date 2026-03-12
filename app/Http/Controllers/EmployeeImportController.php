@@ -16,7 +16,30 @@ class EmployeeImportController extends Controller
                 'employees' => new LengthAwarePaginator([], 0, 20),
                 'fromSharePoint' => false,
                 'sharePointConfigured' => false,
+                'search' => null,
             ]);
+        }
+
+        $search = trim((string) request('q', ''));
+        if ($search !== '') {
+            $lower = mb_strtolower($search);
+            $employees = $employees->filter(function ($e) use ($lower) {
+                $fields = [
+                    (string) ($e->employee_id ?? ''),
+                    (string) ($e->name ?? ''),
+                    (string) ($e->email ?? ''),
+                    (string) ($e->position ?? ''),
+                    (string) ($e->office ?? ''),
+                ];
+
+                foreach ($fields as $field) {
+                    if (str_contains(mb_strtolower($field), $lower)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            })->values();
         }
 
         $page = (int) request('page', 1);
@@ -35,6 +58,7 @@ class EmployeeImportController extends Controller
             'employees' => $paginator,
             'fromSharePoint' => true,
             'sharePointConfigured' => true,
+            'search' => $search !== '' ? $search : null,
         ]);
     }
 }
