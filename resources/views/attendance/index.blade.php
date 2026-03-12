@@ -209,14 +209,12 @@
 
                 document.getElementById('attendanceNotifyClose').onclick = closeOverlay;
                 document.getElementById('attendanceNotifyBackdrop').onclick = closeOverlay;
-
-                setTimeout(closeOverlay, 5000);
             }
 
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', function() { setTimeout(showAttendanceNotify, 50); });
+                document.addEventListener('DOMContentLoaded', function() { setTimeout(showAttendanceNotify, 150); });
             } else {
-                setTimeout(showAttendanceNotify, 50);
+                setTimeout(showAttendanceNotify, 150);
             }
         })();
     </script>
